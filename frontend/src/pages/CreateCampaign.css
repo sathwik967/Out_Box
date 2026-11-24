@@ -1,0 +1,203 @@
+
+.create-campaign-page {
+  padding: 30px;
+  width: 100%;
+  color: #25213b;
+}
+
+.create-campaign-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.create-campaign-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 16px 0 8px;
+}
+
+.create-campaign-header p {
+  color: #88849a;
+  font-size: 14px;
+  margin: 0;
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  color: #7652d6;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.back-button:hover {
+  color: #5835b5;
+}
+
+.campaign-form-card {
+  background: #ffffff;
+  border: 1px solid #eeebf5;
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 850px;
+  box-shadow: 0 4px 20px rgba(35, 20, 75, 0.04);
+}
+
+.form-heading {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0edf5;
+}
+
+.form-heading h2 {
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.form-heading p {
+  color: #88849a;
+  font-size: 13px;
+  margin: 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 22px;
+  flex: 1;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #38334c;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #e5e1ed;
+  border-radius: 9px;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: #29243c;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #8662e8;
+  box-shadow: 0 0 0 3px rgba(134, 98, 232, 0.10);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.form-group small {
+  color: #9994a8;
+  font-size: 11px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-error,
+.form-success {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.form-error {
+  background: #fff0f0;
+  color: #c03939;
+  border: 1px solid #ffdada;
+}
+
+.form-success {
+  background: #edfff4;
+  color: #21834a;
+  border: 1px solid #c9f1d8;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #f0edf5;
+}
+
+.cancel-button,
+.submit-campaign-button {
+  padding: 12px 22px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancel-button {
+  background: #ffffff;
+  border: 1px solid #e5e1ed;
+  color: #625d70;
+}
+
+.cancel-button:hover {
+  background: #f7f5fb;
+}
+
+.submit-campaign-button {
+  background: #7652d6;
+  color: #ffffff;
+  border: none;
+}
+
+.submit-campaign-button:hover {
+  background: #6240c0;
+}
+
+.submit-campaign-button:disabled,
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 650px) {
+  .create-campaign-page {
+    padding: 18px;
+  }
+
+  .campaign-form-card {
+    padding: 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
