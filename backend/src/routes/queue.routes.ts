@@ -19,7 +19,7 @@ router.get("/", async (_req: Request, res: Response) => {
       "delayed",
       "completed",
       "failed",
-      "paused"
+      "paused" as any
     );
 
     const states = [
@@ -34,7 +34,7 @@ router.get("/", async (_req: Request, res: Response) => {
     const jobsByState = await Promise.all(
       states.map(async (state) => {
         const jobs = await emailQueue.getJobs(
-          [state],
+          [state as any],
           0,
           49,
           true
@@ -91,7 +91,9 @@ router.get("/", async (_req: Request, res: Response) => {
 
 router.get("/:jobId", async (req: Request, res: Response) => {
   try {
-    const { jobId } = req.params;
+    const jobId = Array.isArray(req.params.jobId)
+      ? req.params.jobId[0]
+      : req.params.jobId;
 
     // Find the job using its BullMQ job ID.
     const job = await emailQueue.getJob(jobId);

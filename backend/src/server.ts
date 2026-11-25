@@ -11,6 +11,8 @@ import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
 import { emailQueue } from "./queues/email.queue";
 import queueRoutes from "./routes/queue.routes";
+import emailRoutes from "./routes/email.routes";
+import { checkElasticsearchConnection, initElasticsearch } from "./services/elasticsearch";
 
 
 
@@ -21,6 +23,7 @@ app.use(express.json());
 
 app.use("/api/campaigns", campaignRoutes);
 app.use("/api/queue", queueRoutes);
+app.use("/api/emails", emailRoutes);
 
 /*
  * ----------------------------------------------------
@@ -51,6 +54,7 @@ app.get("/health", async (_req, res) => {
   try {
     const dbResult = await testDatabaseConnection();
     const redisResult = await redisConnection.ping();
+    const esConnected = await checkElasticsearchConnection();
 
     res.json({
       success: true,
@@ -58,6 +62,7 @@ app.get("/health", async (_req, res) => {
       database: "Connected",
       databaseTime: dbResult,
       redis: redisResult,
+      elasticsearch: esConnected ? "Connected" : "Disconnected",
     });
   } catch (error) {
     console.error(error);
@@ -77,7 +82,11 @@ app.get("/health", async (_req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Bull Board available at http://localhost:${PORT}/admin/queues`);
+
+  await initElasticsearch().catch((err) => {
+    console.warn("[Elasticsearch] Initialization warning:", err);
+  });
 });

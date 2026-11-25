@@ -3,6 +3,7 @@ import { pool } from "../db";
 import multer from "multer";
 import { parse } from "csv-parse/sync";
 import { emailQueue } from "../queues/email.queue";
+import { indexEmail } from "../services/elasticsearch";
 
 
 const router = Router();
@@ -378,6 +379,26 @@ router.post("/:id/schedule", async (req: Request, res: Response) => {
           recipient.id,
         ]
       );
+
+      // Safe, non-blocking indexing of scheduled email in Elasticsearch
+      indexEmail({
+        id: `recipient-${recipient.id}`,
+        campaignId,
+        recipientId: recipient.id,
+        recipientEmail: recipient.email,
+        recipientName: recipient.name || "there",
+        subject: campaign.subject,
+        status: "scheduled",
+        scheduledAt: new Date(
+          Math.max(0, startTime) + i * delaySeconds * 1000
+        ).toISOString(),
+        createdAt: new Date().toISOString(),
+      }).catch((esErr) => {
+        console.warn(
+          `[Elasticsearch] Non-fatal: Failed to index scheduled recipient ${recipient.id}:`,
+          esErr
+        );
+      });
 
       queuedCount++;
     }

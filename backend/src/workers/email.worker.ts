@@ -6,6 +6,7 @@ import { pool } from "../db";
 import { EmailJobData } from "../queues/email.queue";
 import { checkRateLimit } from "../services/rateLimiter";
 import { checkMinimumDelay } from "../services/minimumDelay";
+import { indexEmail } from "../services/elasticsearch";
 
 // A definite SMTP response means the server explicitly rejected the email.
 // Network errors without an SMTP response are treated as uncertain.
@@ -412,6 +413,29 @@ async function startEmailWorker() {
         recipientEmail,
         info.messageId
       );
+
+      // STEP 7: Index the confirmed sent email in Elasticsearch.
+      // Safe and non-blocking: Elasticsearch failure will NEVER mark the email as failed
+      // or trigger an SMTP retry. PostgreSQL remains the sole source of truth.
+      try {
+        await indexEmail({
+          id: `recipient-${recipientId}`,
+          campaignId,
+          recipientId,
+          recipientEmail,
+          recipientName: recipientName || "there",
+          subject,
+          status: "sent",
+          messageId: info.messageId,
+          sentAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+        });
+      } catch (esError) {
+        console.error(
+          `[Elasticsearch] Non-fatal: Failed to index sent email for recipient ${recipientId}:`,
+          esError
+        );
+      }
 
       const previewUrl = nodemailer.getTestMessageUrl(info);
 
